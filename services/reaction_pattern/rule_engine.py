@@ -1,6 +1,6 @@
 import re
-from services.config_data import REACTION_PATTERNS, LABEL_WEIGHTS
-from services.text_utils import preprocess_lemmas, is_in_neg_scope
+from services.reaction_pattern.config_data import REACTION_PATTERNS, LABEL_WEIGHTS
+from services.reaction_pattern.text_utils import preprocess_lemmas, is_in_neg_scope
 
 def count_matches_phrase_aware(doc, lemma_text: str, label_dict: dict) -> int:
     count = 0

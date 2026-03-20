@@ -1,8 +1,8 @@
 import numpy as np
-from services.config_data import LABEL_TEMPLATES, REACTION_PATTERNS
-from services.text_utils import normalize_patterns_inplace
-from services.rule_engine import rule_scores
-from services.ml_engine import ml_scores, build_template_embeddings
+from services.reaction_pattern.config_data import LABEL_TEMPLATES, REACTION_PATTERNS
+from services.reaction_pattern.text_utils import normalize_patterns_inplace
+from services.reaction_pattern.rule_engine import rule_scores
+from services.reaction_pattern.ml_engine import ml_scores, build_template_embeddings
 
 normalize_patterns_inplace(REACTION_PATTERNS)
 TEMPLATE_EMB = build_template_embeddings(LABEL_TEMPLATES)

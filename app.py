@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from services.predictor_service import hybrid_predict
+from services.reaction_pattern.predictor_service import hybrid_predict
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "your-secret-key"

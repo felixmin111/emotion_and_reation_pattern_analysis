@@ -1,5 +1,5 @@
-from services.nlp_loader import nlp
-from services.config_data import NEG_WORDS
+from services.reaction_pattern.nlp_loader import nlp
+from services.reaction_pattern.config_data import NEG_WORDS
 
 def lemmatize_phrase(phrase: str) -> str:
     doc = nlp(phrase.lower())

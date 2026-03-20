@@ -1,5 +1,5 @@
 from sentence_transformers import util
-from services.nlp_loader import embedder
+from services.reaction_pattern.nlp_loader import embedder
 
 def build_template_embeddings(label_templates: dict):
     return {
