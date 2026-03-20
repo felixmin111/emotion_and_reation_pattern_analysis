@@ -20,11 +20,28 @@
             </div>
         </div>
 
-        {% if top_label %}
-        <div class="result-row">
-            <div class="result-title">Reaction Pattern</div>
-            <div class="result-label">{{ top_label }}</div>
-            <div class="result-score">{{ top_score }}%</div>
+        {% if analysis_rows %}
+        <div class="result-table-wrap">
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Life Area</th>
+                        <th>Reaction Pattern</th>
+                        <th>Percent</th>
+                        <th>Emotion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in analysis_rows %}
+                    <tr>
+                        <td>{{ row.life_area }}</td>
+                        <td>{{ row.reaction_pattern }}</td>
+                        <td>{{ row.percent }}%</td>
+                        <td>{{ row.emotion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         {% endif %}
     </form>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="history-card">
+    <h2>Journal Detail</h2>
+
+    <p><strong>Date:</strong> {{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    <p><strong>Journal Text:</strong></p>
+    <div style="margin-bottom: 24px;">{{ entry.journal_text }}</div>
+
+    {% if entry.analyses %}
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Life Area</th>
+                <th>Reaction Pattern</th>
+                <th>Percent</th>
+                <th>Emotion</th>
+                <th>Chunk Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in entry.analyses %}
+            <tr>
+                <td>{{ row.life_area }}</td>
+                <td>{{ row.reaction_pattern }}</td>
+                <td>{{ row.percent }}%</td>
+                <td>{{ row.emotion }}</td>
+                <td>{{ row.chunk_text }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
