@@ -61,7 +61,15 @@ class JournalAnalysisRow(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+def prettify_label(value):
+    if not value:
+        return ""
+    return value.replace("_", " ").strip().title()
 
+
+# -------------------
+# Routes
+# -------------------
 # -------------------
 # Routes
 # -------------------
@@ -76,6 +84,10 @@ def index():
 
         if journal_text:
             analysis_rows = analyze_journal(journal_text)
+
+            for row in analysis_rows:
+                row["life_area"] = prettify_label(row.get("life_area"))
+                row["reaction_pattern"] = prettify_label(row.get("reaction_pattern"))
 
             entry = JournalEntry(
                 journal_text=journal_text,

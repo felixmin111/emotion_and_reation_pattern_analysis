@@ -1,5 +1,7 @@
 from services.life_area.predictor_service import predict_paragraph
 from services.reaction_pattern.predictor_service import hybrid_predict
+from services.emotion.predictor_service import predict_primary_emotion
+
 
 def analyze_journal(journal_text: str):
     life_chunks = predict_paragraph(journal_text)
@@ -15,12 +17,15 @@ def analyze_journal(journal_text: str):
             reaction_label = reaction_results[0][0]
             reaction_score = round(reaction_results[0][1] * 100, 2)
 
+        emotion_label, emotion_score = predict_primary_emotion(chunk["text"])
+
         rows.append({
             "life_area": chunk["primary"],
             "chunk_text": chunk["text"],
             "reaction_pattern": reaction_label,
             "percent": reaction_score,
-            "emotion": "Neutral"
+            "emotion": emotion_label,
+            "emotion_percent": emotion_score,
         })
 
     return rows
