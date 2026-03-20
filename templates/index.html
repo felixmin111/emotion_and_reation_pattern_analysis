@@ -1,39 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reaction Pattern Analysis</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="container">
-        <form method="POST" class="analysis-form">
-            <div class="row top-row">
-                <div class="label-box">
-                    <label for="journal_text">Your Journal<br>Prompt</label>
-                </div>
+{% extends 'base.html' %}
 
-                <div class="input-area">
-                    <textarea
-                        id="journal_text"
-                        name="journal_text"
-                        rows="3"
-                        placeholder="Write your journal here..."
-                    >{{ journal_text }}</textarea>
-
-                    <button type="submit">Analysis</button>
-                </div>
+{% block content %}
+<div class="container">
+    <form method="POST" class="analysis-form">
+        <div class="row top-row">
+            <div class="label-box">
+                <label for="journal_text">Your Journal<br>Prompt</label>
             </div>
 
-            {% if top_label %}
-            <div class="result-row">
-                <div class="result-title">Reaction Pattern</div>
-                <div class="result-label">{{ top_label }}</div>
-                <div class="result-score">{{ top_score }}%</div>
+            <div class="input-area">
+                <textarea
+                    id="journal_text"
+                    name="journal_text"
+                    rows="5"
+                    placeholder="Write your thoughts here..."
+                >{{ journal_text }}</textarea>
+
+                <button type="submit">Analysis</button>
             </div>
-            {% endif %}
-        </form>
-    </div>
-</body>
-</html>
+        </div>
+
+        {% if top_label %}
+        <div class="result-row">
+            <div class="result-title">Reaction Pattern</div>
+            <div class="result-label">{{ top_label }}</div>
+            <div class="result-score">{{ top_score }}%</div>
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}
