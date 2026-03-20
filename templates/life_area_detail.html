@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ life_area }} Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fc;
+            margin: 0;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        .chunk {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>{{ life_area }} Emotional Dashboard</h1>
+    <p><a href="{{ url_for('dashboard.dashboard') }}">← Back to dashboard</a></p>
+
+    <div class="section">
+        <h2>Emotion Distribution</h2>
+        <canvas id="emotionPie"></canvas>
+    </div>
+
+    <div class="section">
+        <h2>Reaction Pattern Distribution</h2>
+        <canvas id="reactionPie"></canvas>
+    </div>
+
+    <div class="section">
+        <h2>Emotion Timeline</h2>
+        <canvas id="timelineChart"></canvas>
+    </div>
+
+    <div class="section">
+        <h2>Recent Journal Chunks</h2>
+        {% for chunk in recent_chunks %}
+        <div class="chunk">
+            <p><strong>Date:</strong> {{ chunk.date }}</p>
+            <p><strong>Emotion:</strong> {{ chunk.emotion }}</p>
+            <p><strong>Reaction:</strong> {{ chunk.reaction_pattern }}</p>
+            <p>{{ chunk.chunk_text }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        const emotionDistribution = {{ emotion_distribution | tojson }};
+        const reactionDistribution = {{ reaction_distribution | tojson }};
+        const timelineLabels = {{ timeline_labels | tojson }};
+        const timelineScores = {{ timeline_scores | tojson }};
+
+        new Chart(document.getElementById("emotionPie"), {
+            type: "pie",
+            data: {
+                labels: Object.keys(emotionDistribution),
+                datasets: [{
+                    data: Object.values(emotionDistribution)
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("reactionPie"), {
+            type: "pie",
+            data: {
+                labels: Object.keys(reactionDistribution),
+                datasets: [{
+                    data: Object.values(reactionDistribution)
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("timelineChart"), {
+            type: "line",
+            data: {
+                labels: timelineLabels,
+                datasets: [{
+                    label: "Emotion Score",
+                    data: timelineScores,
+                    fill: false,
+                    tension: 0.3
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

@@ -22,8 +22,8 @@
                     <td>{{ entry.analyses|length }}</td>
                     <td>
                         <div class="action-group">
-                            <a href="{{ url_for('history_detail', entry_id=entry.id) }}" class="view-btn">View</a>
-                            <form method="POST" action="{{ url_for('delete_entry', entry_id=entry.id) }}">
+                            <a href="{{ url_for('history.history_detail', entry_id=entry.id) }}" class="view-btn">View</a>
+                            <form method="POST" action="{{ url_for('history.delete_entry', entry_id=entry.id) }}">
                                 <button type="submit" class="delete-btn">Delete</button>
                             </form>
                         </div>

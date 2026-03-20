@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emotional Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            background: #f3f1f4;
+            color: #1c1c1c;
+        }
+
+        .page {
+            max-width: 1280px;
+            margin: 36px auto 50px;
+            padding: 0 18px;
+        }
+
+        /* top menu */
+        .topbar {
+            background: #fbf9fb;
+            border-radius: 18px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .topbar a,
+        .topbar span {
+            text-decoration: none;
+            color: #444;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .topbar a:hover {
+            color: #2f69b1;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0 0 22px;
+            color: #111;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(230px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .summary-card {
+            background: #fbf9fb;
+            border-radius: 20px;
+            padding: 24px 22px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ece7ec;
+            min-height: 168px;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2f69b1;
+        }
+
+        .summary-card p {
+            margin: 10px 0;
+            font-size: 15px;
+            line-height: 1.55;
+        }
+
+        .summary-card strong {
+            font-weight: 800;
+        }
+
+        .chart-panel {
+            background: #fbf9fb;
+            border-radius: 20px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ece7ec;
+            padding: 28px 24px 30px;
+        }
+
+        .chart-title {
+            margin: 0 0 24px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .chart-layout {
+            display: grid;
+            grid-template-columns: 210px 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .legend-box {
+            padding-top: 8px;
+            padding-left: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1d1d1d;
+        }
+
+        .legend-swatch {
+            width: 46px;
+            height: 24px;
+            border: 2px solid transparent;
+            background: transparent;
+            display: inline-block;
+        }
+
+        .chart-canvas-wrap {
+            position: relative;
+            height: 430px;
+        }
+
+        @media (max-width: 1150px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, minmax(220px, 1fr));
+            }
+
+            .chart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .legend-box {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(140px, 1fr));
+                gap: 10px 16px;
+                padding-left: 0;
+            }
+
+            .legend-item {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .nav-left,
+            .nav-right {
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .chart-title {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- top menu -->
+        <div class="topbar">
+            <div class="nav-left">
+                <a href="{{ url_for('journal.index') }}">Home</a>
+                <a href="{{ url_for('history.history') }}">My History</a>
+                <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+            </div>
+
+            <div class="nav-right">
+                <span>Hi, {{ current_user.username }}</span>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+
+        <h1 class="page-title">Emotional Analysis Dashboard</h1>
+
+        <section class="summary-grid">
+            {% for item in life_area_summary %}
+                <div class="summary-card">
+                    <h3>{{ item.life_area }}</h3>
+                    <p><strong>Total Mentions:</strong> {{ item.count }}</p>
+                    <p><strong>Top Emotion:</strong> {{ item.top_emotion }}</p>
+                    <p><strong>Avg Emotion Score:</strong> {{ item.avg_emotion_score }}</p>
+                </div>
+            {% endfor %}
+        </section>
+
+        <section class="chart-panel">
+            <h2 class="chart-title">Emotion Distribution by Life Area</h2>
+
+            <div class="chart-layout">
+                <div class="legend-box" id="customLegend"></div>
+
+                <div class="chart-canvas-wrap">
+                    <canvas id="emotionStackedChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const emotionByLifeArea = {{ emotion_by_life_area | tojson }};
+
+        const emotionColorMap = {
+          "Happy": {
+              background: "rgba(102, 221, 170, 0.9)",
+              border: "#1f9d73"
+          },
+          "Confidence": {
+              background: "rgba(100, 181, 246, 0.9)",
+              border: "#1e88e5"
+          },
+          "Caring": {
+              background: "rgba(129, 199, 132, 0.9)",
+              border: "#388e3c"
+          },
+          "Disapproval": {
+              background: "rgba(144, 164, 174, 0.9)",
+              border: "#546e7a"
+          },
+          "Sadness": {
+              background: "rgba(229, 115, 115, 0.9)",
+              border: "#c62828"
+          },
+          "Anxiety": {
+              background: "rgba(186, 104, 200, 0.9)",
+              border: "#8e24aa"
+          },
+          "Realization": {
+              background: "rgba(255, 202, 40, 0.9)",
+              border: "#f9a825"
+          },
+          "Neutral": {
+              background: "rgba(255, 224, 130, 0.9)",
+              border: "#ffb300"
+          },
+          "Unknown": {
+              background: "rgba(189, 189, 189, 0.9)",
+              border: "#757575"
+          }
+        };
+
+        const lifeAreas = Object.keys(emotionByLifeArea);
+
+        const allEmotions = [...new Set(
+            lifeAreas.flatMap(area => Object.keys(emotionByLifeArea[area] || {}))
+        )];
+
+        const preferredOrder = [
+            "Happy", "Joy",
+            "Sad", "Sadness",
+            "Anxiety", "Fear",
+            "Confidence", "Realization",
+            "Neutral",
+            "Worry", "Stress",
+            "Caring",
+            "Unknown"
+        ];
+
+        allEmotions.sort((a, b) => {
+            const indexA = preferredOrder.indexOf(a);
+            const indexB = preferredOrder.indexOf(b);
+
+            if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+        });
+
+        const datasets = allEmotions.map(emotion => {
+            const style = emotionColorMap[emotion] || emotionColorMap["Unknown"];
+
+            return {
+                label: emotion,
+                data: lifeAreas.map(area => emotionByLifeArea[area][emotion] || 0),
+                backgroundColor: style.background,
+                borderColor: style.border,
+                borderWidth: 2,
+                borderSkipped: false,
+                stack: "emotionStack",
+                categoryPercentage: 0.62,
+                barPercentage: 0.88
+            };
+        });
+
+        const ctx = document.getElementById("emotionStackedChart");
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: lifeAreas,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        top: 10,
+                        right: 12,
+                        left: 0,
+                        bottom: 0
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw || 0}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: "#111",
+                            font: {
+                                size: 15,
+                                weight: "600"
+                            }
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: "#666",
+                            font: {
+                                size: 13
+                            }
+                        },
+                        grid: {
+                            color: "rgba(0, 0, 0, 0.08)",
+                            drawBorder: false
+                        }
+                    }
+                }
+            }
+        });
+
+        const legendContainer = document.getElementById("customLegend");
+
+        allEmotions.forEach(emotion => {
+            const style = emotionColorMap[emotion] || emotionColorMap["Unknown"];
+
+            const item = document.createElement("div");
+            item.className = "legend-item";
+
+            const label = document.createElement("span");
+            label.textContent = emotion;
+
+            const swatch = document.createElement("span");
+            swatch.className = "legend-swatch";
+            swatch.style.background = style.background;
+            swatch.style.borderColor = style.border;
+
+            item.appendChild(label);
+            item.appendChild(swatch);
+            legendContainer.appendChild(item);
+        });
+    </script>
+</body>
+</html>

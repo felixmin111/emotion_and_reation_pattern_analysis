@@ -415,3 +415,92 @@ body {
 .history-table td form {
     margin: 0;
 }
+.history-detail-card {
+    max-width: 1220px;
+}
+
+.journal-detail-box {
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #ece4e8;
+    border-radius: 16px;
+    line-height: 1.7;
+    color: #4a4a4a;
+    white-space: pre-wrap;
+}
+
+.detail-table-wrap {
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.detail-table {
+    width: 100%;
+    min-width: 1180px;
+    table-layout: fixed;
+}
+
+.detail-table th,
+.detail-table td {
+    vertical-align: top;
+}
+
+.detail-table th:nth-child(1),
+.detail-table td:nth-child(1) {
+    width: 16%;
+}
+
+.detail-table th:nth-child(2),
+.detail-table td:nth-child(2) {
+    width: 16%;
+}
+
+.detail-table th:nth-child(3),
+.detail-table td:nth-child(3) {
+    width: 12%;
+    white-space: nowrap;
+}
+
+.detail-table th:nth-child(4),
+.detail-table td:nth-child(4) {
+    width: 12%;
+}
+
+.detail-table th:nth-child(5),
+.detail-table td:nth-child(5) {
+    width: 12%;
+    white-space: nowrap;
+}
+
+.detail-table th:nth-child(6),
+.detail-table td:nth-child(6) {
+    width: 32%;
+}
+
+.chunk-box {
+    max-height: 180px;
+    overflow-y: auto;
+    padding: 12px 14px;
+    background: #f9f7f8;
+    border: 1px solid #ece4e8;
+    border-radius: 12px;
+    line-height: 1.65;
+    font-size: 15px;
+    color: #494949;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.chunk-box::-webkit-scrollbar {
+    width: 7px;
+}
+
+.chunk-box::-webkit-scrollbar-thumb {
+    background-color: #c8bcc3;
+    border-radius: 8px;
+}
+
+.chunk-box::-webkit-scrollbar-track {
+    background: transparent;
+}
